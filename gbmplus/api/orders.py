@@ -91,8 +91,9 @@ class Orders(object):
             "contractId": legacy_contract_id,
             "accountId": legacy_contract_id,
             "instrumentTypes": [0, 2],
-            "processDate": datetime.utcnow().strftime('%Y-%m-%dT06:00:00.000Z')
+            "processDate": datetime.now().strftime('%Y-%m-%dT06:00:00.000Z')
         }
         
         return self._session.post(metadata, resource, payload)
+
                 
