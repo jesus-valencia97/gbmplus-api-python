@@ -10,12 +10,23 @@ from .api.orders import Orders
 from .api.tradingUSA import TradingUSA
 
 from .config import (
-    USER_EMAIL, USER_PASSWORD, CLIENT_ID, SINGLE_REQUEST_TIMEOUT,
-    RETRY_4XX_ERROR, RETRY_4XX_ERROR_WAIT_TIME, MAXIMUM_RETRIES,
-    OUTPUT_LOG, LOG_PATH, LOG_FILE_PREFIX, PRINT_TO_CONSOLE, SUPPRESS_LOGGING
+    USER_EMAIL,
+    USER_PASSWORD,
+    CLIENT_ID,
+    SINGLE_REQUEST_TIMEOUT,
+    RETRY_4XX_ERROR,
+    RETRY_4XX_ERROR_WAIT_TIME,
+    MAXIMUM_RETRIES,
+    OUTPUT_LOG,
+    LOG_PATH,
+    LOG_FILE_PREFIX,
+    PRINT_TO_CONSOLE,
+    SUPPRESS_LOGGING,
+    GBM_KEY,
 )
 
-__version__ = '0.12'
+__version__ = "0.12"
+
 
 class GBMPlusAPI(object):
     """
@@ -23,7 +34,7 @@ class GBMPlusAPI(object):
     - user_email (string): GBM+ User Email
     - user_password (string): GBM+ User Password
     - client_id (string): GBM+ User Client ID
-    - single_request_timeout (integer): maximum number of seconds for each API call  
+    - single_request_timeout (integer): maximum number of seconds for each API call
     - retry_4xx_error (boolean): retry if encountering 4XX errors?
     - retry_4xx_error_wait_time (integer): 4XX error retry wait time
     - maximum_retries (integer): retry up to this many times when encountering server-side errors
@@ -31,19 +42,30 @@ class GBMPlusAPI(object):
     - log_path (string): path to output log; by default, working directory of script if not specified
     - log_file_prefix (string): log file name appended with date and timestamp
     - print_console (boolean): print logging output to console?
-    - suppress_logging (boolean): disable all logging? 
+    - suppress_logging (boolean): disable all logging?
     """
 
-    def __init__(self, user_email=None, user_password=None, client_id=None,
-                 single_request_timeout=SINGLE_REQUEST_TIMEOUT, maximum_retries=MAXIMUM_RETRIES,
-                 retry_4xx_error= RETRY_4XX_ERROR,retry_4xx_error_wait_time=RETRY_4XX_ERROR_WAIT_TIME,
-                 output_log=OUTPUT_LOG, log_path=LOG_PATH, log_file_prefix=LOG_FILE_PREFIX,
-                 print_console=PRINT_TO_CONSOLE, suppress_logging=SUPPRESS_LOGGING):
-                
-        user_email = user_email or os.getenv(USER_EMAIL)        
+    def __init__(
+        self,
+        user_email=None,
+        user_password=None,
+        client_id=None,
+        gbm_key=None,
+        single_request_timeout=SINGLE_REQUEST_TIMEOUT,
+        maximum_retries=MAXIMUM_RETRIES,
+        retry_4xx_error=RETRY_4XX_ERROR,
+        retry_4xx_error_wait_time=RETRY_4XX_ERROR_WAIT_TIME,
+        output_log=OUTPUT_LOG,
+        log_path=LOG_PATH,
+        log_file_prefix=LOG_FILE_PREFIX,
+        print_console=PRINT_TO_CONSOLE,
+        suppress_logging=SUPPRESS_LOGGING,
+    ):
+        user_email = user_email or os.getenv(USER_EMAIL)
         user_password = user_password or os.getenv(USER_PASSWORD)
-        client_id = client_id or os.getenv(CLIENT_ID)    
-        
+        client_id = client_id or os.getenv(CLIENT_ID)
+        gbm_key = gbm_key or os.getenv(GBM_KEY)
+
         if not user_email or not user_password or not client_id:
             raise UserError()
 
@@ -84,11 +106,12 @@ class GBMPlusAPI(object):
             user_email=user_email,
             user_password=user_password,
             client_id=client_id,
+            gbm_key=gbm_key,
             single_request_timeout=single_request_timeout,
             retry_4xx_error=retry_4xx_error,
             retry_4xx_error_wait_time=retry_4xx_error_wait_time,
-            maximum_retries=maximum_retries
-        )        
+            maximum_retries=maximum_retries,
+        )
 
         # Authenticate User
         self._session.authenticate()
@@ -106,11 +129,9 @@ class GBMPlusAPI(object):
 class OrderTypes(Enum):
     Buy = 1
     Sell = 8
-    
 class TradingTypes(Enum):
     Limited = 0
-    Market = 5    
-    
+    Market = 5
 class InstrumentTypes(Enum):
     SIC = 0
     IPC = 2

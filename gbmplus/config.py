@@ -29,5 +29,8 @@ LOG_FILE_PREFIX = 'gbmplus_api_'
 # Print output logging to console?
 PRINT_TO_CONSOLE = True
 
-# Disable all logging? 
+# Disable all logging?
 SUPPRESS_LOGGING = False
+
+# Double authentication
+GBM_KEY = "GBM_KEY"

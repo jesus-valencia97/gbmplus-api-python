@@ -18,7 +18,8 @@ class RestSession(object):
         logger,
         user_email,
         user_password,
-        client_id,   
+        client_id,
+        gbm_key,
         single_request_timeout=SINGLE_REQUEST_TIMEOUT,
         retry_4xx_error=RETRY_4XX_ERROR,
         retry_4xx_error_wait_time=RETRY_4XX_ERROR_WAIT_TIME,
@@ -30,7 +31,8 @@ class RestSession(object):
         self._version = __version__
         self._user_email = str(user_email)
         self._user_password = str(user_password)
-        self._client_id = str(client_id)        
+        self._client_id = str(client_id)
+        self._gbm_key = str(gbm_key)
         self._single_request_timeout = single_request_timeout
         self._retry_4xx_error = retry_4xx_error
         self._retry_4xx_error_wait_time = retry_4xx_error_wait_time
@@ -216,7 +218,25 @@ class RestSession(object):
         response = self.post(metadata, resource, payload)
 
         if response:
-            self._access_token = response.get('accessToken')
+            if self._gbm_key != "None":
+                print("ENTERING D2F")
+                import pyotp
+
+                totp = pyotp.TOTP(self._gbm_key)
+                code = totp.now()
+                payload = {
+                    "challengeType": "SOFTWARE_TOKEN_MFA",
+                    "clientid": self._client_id,
+                    "user": self._user_email,
+                    "session": response["challengeInfo"]["session"],
+                    "code": code,
+                }
+
+                resource = "https://auth.gbm.com/api/v1/session/user/challenge"
+
+                response = self.post(metadata, resource, payload)
+
+            self._access_token = response.get("accessToken")
 
             # Update session headers with authentication
             self._req_session.headers['Authorization'] = 'Bearer ' + self._access_token                                             
