@@ -36,7 +36,7 @@ setup(
     version=__version__,
     packages=find_packages(),
     include_package_data=True,
-    install_requires=['requests', 'geocoder'],
+    install_requires=['requests', 'geocoder','pyotp'],
     keywords=['gbmplus', 'gbmhomebroker', 'gbm'],
     description='GBM Plus API Python Library',
     long_description=README,
