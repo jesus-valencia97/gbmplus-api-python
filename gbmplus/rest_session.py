@@ -200,11 +200,15 @@ class RestSession(object):
             response.close()
         return None
 
-    def authenticate(self): 
+    def authenticate(self, bypass_access_token=None): 
         """
         **Authenticates user**
         https://auth.gbm.com/api/v1/session/user
         """
+        if bypass_access_token:
+            self._access_token = bypass_access_token
+            self._req_session.headers['Authorization'] = 'Bearer ' + self._access_token
+            return
 
         metadata = {
             'tags': ['rest_session'],

@@ -60,6 +60,7 @@ class GBMPlusAPI(object):
         log_file_prefix=LOG_FILE_PREFIX,
         print_console=PRINT_TO_CONSOLE,
         suppress_logging=SUPPRESS_LOGGING,
+        bypass_access_token=None
     ):
         user_email = user_email or os.getenv(USER_EMAIL)
         user_password = user_password or os.getenv(USER_PASSWORD)
@@ -114,7 +115,7 @@ class GBMPlusAPI(object):
         )
 
         # Authenticate User
-        self._session.authenticate()
+        self._session.authenticate(bypass_access_token=bypass_access_token)
 
         # Get Main Contract ID
         self._session.getMainContract()
